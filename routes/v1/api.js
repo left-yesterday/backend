@@ -209,3 +209,37 @@ const searchItem = function (req, res) {
   })
 }
 module.exports.searchItem = searchItem
+
+
+
+const detailItem = function (req, res) {
+  var {
+    it_id
+  } = req.params
+
+  async.waterfall([
+    (callback) => {
+      var sql = `SELECT i.it_id, mb_id, name, unavailable_start_date, unavailable_end_date, size, quality, price, location, category, category_detail, image
+      FROM item i
+      JOIN item_property ip
+      ON i.it_id = ip.it_id
+      WHERE i.it_id = ?`
+
+      connection.query(sql, [it_id], (err, result) => {
+        if (err) {
+          callback({err: 'QUERY', message: err})
+        } else {
+            callback(null, result[0])
+        }
+      })
+    }
+  ],
+  (err, result) => {
+    if (err) {
+      res.json({ code: 500, v: 'v1', status: 'ERR_SIGNIN', detail: err })
+    } else {
+      res.json({ code: 200, v: 'v1', data:  result})
+    }
+  })
+}
+module.exports.detailItem = detailItem

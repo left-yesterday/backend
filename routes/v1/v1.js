@@ -23,7 +23,7 @@ router.get('/item/search', function (req, res) {
   CLOSET_API.searchItem(req, res)
 })
 
-router.get('/item/detail', function (req, res) {
+router.get('/item/detail/:it_id', function (req, res) {
   CLOSET_API.detailItem(req, res)
 })
 
