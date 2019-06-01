@@ -3,6 +3,42 @@ var connection = mysql_dbc.init()
 const async = require('async')
 require('dotenv').config()
 
+const signIn = function (req, res) {
+  var {
+    email,
+    password
+  } = req.body
+  if (!email || !password) {
+    res.json({ code: 400, v: 'v1', status: 'ERR_FIELD' })
+  } else {
+    async.waterfall([
+      (callback) => {
+        var sql = `SELECT COUNT(*) AS count FROM member WHERE email = ? AND password = PASSWORD(?)`
+        connection.query(sql, [email, password], (err, result) => {
+          if (err) {
+            callback({err: 'QUERY', message: err})
+          } else {
+            if (result[0].count == 1) {
+              callback(null, result[0].count)
+            } else {
+              callback({err: 'FAIL', message: 'LOGIN CREDENTIAL IS INCORRECT'})
+            }
+          }
+        })
+      }
+    ],
+    (err, result) => {
+      if (err) {
+        res.json({ code: 500, v: 'v1', status: 'ERR_SIGNIN', detail: err })
+      } else {
+        res.json({ code: 200, v: 'v1', status: 'SUCCESS' })
+      }
+    })
+  }
+}
+
+module.exports.signIn = signIn
+
 const signUp = function (req, res) {
   var {
     email,
