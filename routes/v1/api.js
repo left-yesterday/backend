@@ -29,7 +29,7 @@ const signUp = function (req, res) {
         })
       },
       (results, callback) => {
-        var sql = `INSERT INTO member(email, password, name) VALUES(?, ?, ?)`
+        var sql = `INSERT INTO member(email, password, name) VALUES(?, ?, PASSWORD(?))`
         connection.query(sql, [email, password, name], (err, result) => {
           if (err) {
             callback({err: 'QUERY', message: err})
