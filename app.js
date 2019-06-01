@@ -6,6 +6,8 @@ var http = require('http')
 var createError = require('http-errors')
 var logger = require('morgan')
 var cors = require('cors')
+const formData = require("express-form-data");
+const os = require("os");
 
 var app = express()
 
@@ -26,7 +28,11 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: false
 }))
+const options = {
+  uploadDir: os.tmpdir()
+};
 
+app.use(formData.parse(options));
 app.use(cors())
 
 const v1 = require('./routes/v1/v1')
@@ -42,6 +48,7 @@ app.use(function (req, res, next) {
 })
 
 app.use(function (err, req, res, next) {
+  console.log(err)
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
   res.status(err.status || 500)

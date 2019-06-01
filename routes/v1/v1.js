@@ -19,7 +19,7 @@ router.post('/item/regist', function (req, res) {
   CLOSET_API.registItem(req, res)
 })
 
-router.post('/item/search', function (req, res) {
+router.get('/item/search', function (req, res) {
   CLOSET_API.searchItem(req, res)
 })
 
