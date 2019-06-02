@@ -171,7 +171,8 @@ const searchItem = function (req, res) {
   console.log(name)
   async.waterfall([
     (callback) => {
-      var sql = `SELECT i.it_id, mb_id, name, unavailable_start_date, unavailable_end_date, IF(date(NOW()) > unavailable_end_date || date(NOW()) < unavailable_start_date, 0, 1) AS available
+      var sql = `SELECT i.it_id, mb_id, name, unavailable_start_date, unavailable_end_date, size, quality, price, location, category, category_detail, image,
+      IF(date(NOW()) > unavailable_end_date || date(NOW()) < unavailable_start_date, 0, 1) AS available
       FROM item i
       JOIN item_property ip
       ON i.it_id = ip.it_id
