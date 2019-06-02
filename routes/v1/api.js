@@ -257,7 +257,7 @@ const getList = function (req, res) {
         if (err) {
           callback({err: 'QUERY', message: err})
         } else {
-            callback(null, result[0])
+            callback(null, result)
         }
       })
     }
