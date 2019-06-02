@@ -31,6 +31,23 @@ router.get('/list', function (req, res) {
   CLOSET_API.getList(req, res)
 })
 
+router.post('/order', function (req, res) {
+  CLOSET_API.order(req, res)
+})
+
+router.get('/order/list/:mb_id', function (req, res) {
+  CLOSET_API.orderList(req, res)
+})
+
+router.get('/order/sale/:mb_id', function (req, res) {
+  CLOSET_API.saleList(req, res)
+})
+
+router.get('/order/rent/:mb_id', function (req, res) {
+  CLOSET_API.rentList(req, res)
+})
+
+
 router.get('/notification/list', function (req, res) {
   CLOSET_API.listNotification(req, res)
 })

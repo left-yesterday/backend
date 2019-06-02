@@ -167,6 +167,8 @@ const searchItem = function (req, res) {
     category_detail
   } = req.query
 
+  var name = req.query.name
+  console.log(name)
   async.waterfall([
     (callback) => {
       var sql = `SELECT i.it_id, mb_id, name, unavailable_start_date, unavailable_end_date, IF(date(NOW()) > unavailable_end_date || date(NOW()) < unavailable_start_date, 0, 1) AS available
@@ -177,21 +179,27 @@ const searchItem = function (req, res) {
       var params = [];
 
       if(category){
-        sql += 'AND category = ?'
+        sql += ' AND category = ?'
         params.push(category)
       }
 
       if(quality){
-        sql += 'AND quality = ?'
+        sql += ' AND quality = ?'
         params.push(quality)
       }
 
       if(category_detail){
-        sql += 'AND category_detail = ?'
+        sql += ' AND category_detail = ?'
         params.push(category_detail)
       }
 
+      if(name){
+        sql += ` AND name like '%${name}%'`
+      }
+
       connection.query(sql, [params], (err, result) => {
+        console.log(sql)
+        console.log(err)
         if (err) {
           callback({err: 'QUERY', message: err})
         } else {
@@ -272,3 +280,95 @@ const getList = function (req, res) {
   })
 }
 module.exports.getList = getList
+
+
+const order = function (req, res) {
+  var {
+    owner_mb_id,
+    customer_mb_id,
+    price,
+    start_date,
+    end_date,
+    it_id
+  } = req.query
+  var params = [owner_mb_id, customer_mb_id, price, start_date, end_date, it_id]
+  async.waterfall([
+    (callback) => {
+      var sql = `INSERT INTO item_property (owner_mb_id, customer_mb_id, price, start_date, end_date, it_id) 
+      VALUES (?);`
+
+      connection.query(sql, [params], (err, result) => {
+        if (err) {
+          callback({err: 'QUERY', message: err})
+        } else {
+            callback(null, result)
+        }
+      })
+    }
+  ],
+  (err, result) => {
+    if (err) {
+      res.json({ code: 500, v: 'v1', status: 'ERR_SIGNIN', detail: err })
+    } else {
+      res.json({ code: 200, v: 'v1', dataList:  result})
+    }
+  })
+}
+module.exports.order = order
+
+const saleList = function (req, res) {
+  var {
+    mb_id
+  } = req.params
+
+  async.waterfall([
+    (callback) => {
+      var sql = `SELECT * FROM order WHERE owner_mb_id = ?`
+
+      connection.query(sql, [mb_id], (err, result) => {
+        if (err) {
+          callback({err: 'QUERY', message: err})
+        } else {
+            callback(null, result)
+        }
+      })
+    }
+  ],
+  (err, result) => {
+    if (err) {
+      res.json({ code: 500, v: 'v1', status: 'ERR_SIGNIN', detail: err })
+    } else {
+      res.json({ code: 200, v: 'v1', dataList:  result})
+    }
+  })
+}
+module.exports.saleList = saleList
+
+
+const rentList = function (req, res) {
+  var {
+    mb_id
+  } = req.params
+
+  async.waterfall([
+    (callback) => {
+      var sql = `SELECT * FROM order WHERE customer_mb_id = ?`
+
+      connection.query(sql, [mb_id], (err, result) => {
+        if (err) {
+          callback({err: 'QUERY', message: err})
+        } else {
+            callback(null, result)
+        }
+      })
+    }
+  ],
+  (err, result) => {
+    if (err) {
+      res.json({ code: 500, v: 'v1', status: 'ERR_SIGNIN', detail: err })
+    } else {
+      res.json({ code: 200, v: 'v1', dataList:  result})
+    }
+  })
+}
+module.exports.rentList = rentList
