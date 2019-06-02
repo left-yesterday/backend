@@ -198,8 +198,6 @@ const searchItem = function (req, res) {
       }
 
       connection.query(sql, [params], (err, result) => {
-        console.log(sql)
-        console.log(err)
         if (err) {
           callback({err: 'QUERY', message: err})
         } else {
