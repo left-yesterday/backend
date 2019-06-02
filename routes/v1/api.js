@@ -161,11 +161,6 @@ module.exports.registItem = registItem
 
 
 const searchItem = function (req, res) {
-  var {
-    quality,
-    category,
-    category_detail
-  } = req.query
 
   var name = req.query.name
   console.log(name)
@@ -178,21 +173,6 @@ const searchItem = function (req, res) {
       ON i.it_id = ip.it_id
       WHERE is_available = 1`
       var params = [];
-
-      if(category){
-        sql += ' AND category = ?'
-        params.push(category)
-      }
-
-      if(quality){
-        sql += ' AND quality = ?'
-        params.push(quality)
-      }
-
-      if(category_detail){
-        sql += ' AND category_detail = ?'
-        params.push(category_detail)
-      }
 
       if(name){
         sql += ` AND name like '%${name}%'`
