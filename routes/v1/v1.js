@@ -27,6 +27,10 @@ router.get('/item/detail/:it_id', function (req, res) {
   CLOSET_API.detailItem(req, res)
 })
 
+router.get('/list', function (req, res) {
+  CLOSET_API.getList(req, res)
+})
+
 router.get('/notification/list', function (req, res) {
   CLOSET_API.listNotification(req, res)
 })
